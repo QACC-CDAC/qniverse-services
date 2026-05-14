@@ -6,7 +6,6 @@ After=network.target
 User=qniverse
 Group=qacc
 WorkingDirectory=/opt/qniverse-services
-ExecStart=/etc/qniverse-services/scripts/start_service.sh
 
 Environment="PATH=/opt/qniverse-services/venv/bin"
 Environment="PACKAGE_BASE_DIR=/opt/qniverse-services/packages"
