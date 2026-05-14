@@ -4,7 +4,13 @@ from typing import Dict, Any, Tuple, List, Optional
 import asyncio
 
 from src.core.interfaces import BaseTranspiler
+from src.transpilers.qasm_to_cirq import QasmToCirqTranspiler
+from src.transpilers.qasm_to_cudaq import QasmToCudaqTranspiler
+from src.transpilers.qasm_to_qi import QasmToQITranspiler
 from src.transpilers.qasm_to_qiskit import QasmToQiskitTranspiler
+from src.transpilers.qasm_to_quest import QasmToQuestTranspiler
+from src.transpilers.qasm_to_quil import QasmToQuilTranspiler
+from src.transpilers.qasm_to_qulacs import QasmToQulacsTranspiler
 from src.transpilers.registry import TranspilerRegistry
 from src.transpilers.python_to_js import PythonToJavaScriptTranspiler
 from src.core.exceptions import LanguageNotSupportedError, TranspilerError
@@ -26,6 +32,12 @@ class TranspilationService:
         # Register Python to JavaScript
         self.registry.register(PythonToJavaScriptTranspiler())
         self.registry.register(QasmToQiskitTranspiler())
+        self.registry.register(QasmToCirqTranspiler())
+        self.registry.register(QasmToQuestTranspiler())
+        self.registry.register(QasmToQulacsTranspiler())
+        self.registry.register(QasmToCudaqTranspiler())
+        self.registry.register(QasmToQuilTranspiler())
+        self.registry.register(QasmToQITranspiler())
         
         # Register more transpilers here
         # self.registry.register(PythonToGoTranspiler())

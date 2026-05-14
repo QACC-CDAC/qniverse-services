@@ -10,18 +10,32 @@ class Language(str, Enum):
     """Supported programming languages"""
     PYTHON = "python"
     JAVASCRIPT = "javascript"
-    TYPESCRIPT = "typescript"
-    JAVA = "java"
-    GO = "go"
-    RUST = "rust"
-    CSHARP = "csharp"
     QASM = "qasm"
     QISKIT = "qiskit"
+    CIRQ = "cirq"
+    CUDAQ = "cudaq"
+    QUEST = "quest"
+    QULACS = "qulacs"
+    QUIL = "quil"
+    QI="qi"
     
     @classmethod
     def list_all(cls) -> List[str]:
         """Get list of all supported languages"""
         return [lang.value for lang in cls]
+
+class PostProcessingMethod(str, Enum):
+    """Supported post-processing methods for QRNG"""
+    VON_NEUMANN = "von_neumann"
+    XOR = "xor"
+    POLYNOMIAL = "polynomial"
+    TOEPLITZ_MIXER = "toeplitz"
+    NONE = "none"
+    
+    @classmethod
+    def list_all(cls) -> List[str]:
+        """Get list of all supported post-processing methods"""
+        return [method.value for method in cls]
 
 
 class TranspileOptions(BaseModel):
@@ -30,6 +44,10 @@ class TranspileOptions(BaseModel):
     include_comments: bool = Field(default=True, description="Include comments in output")
     strict_mode: bool = Field(default=False, description="Enable strict transpilation mode")
     optimization_level: int = Field(default=1, ge=0, le=3, description="Optimization level (0-3)")
+    shots: int = Field(default=1024, ge=0, le=10000, description="Shots  (0-10000)")
+    decompose: bool = Field(default=True, description="Whether to decompose complex operations")
+    backendName: str = Field(default="qasm_simulator", description="Name of the backend to use")
+    processor: str = Field(default="cpu", description="Name of the processor to use")
     custom_mappings: Optional[Dict[str, str]] = Field(default=None, description="Custom language mappings")
     
     model_config = ConfigDict(extra="allow")
@@ -282,3 +300,34 @@ class PackageListResponse(BaseModel):
     username: str
     packages: List[Dict[str, str]]
     environment_path: str
+
+
+class QRNGRequest(BaseModel):
+    """Request model for QRNG generation"""
+    
+    count: int = Field(..., ge=512, le=5000000, description="Number of random bits to generate")
+    post_processing: Optional[PostProcessingMethod] = Field(None, description="Optional post-processing method (e.g., 'von_neumann')")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "count": 513,
+                 "post_processing": "none"
+            }
+        }
+
+class QRNGResponse(BaseModel):
+    """Response model for QRNG generation"""
+    
+    random_numbers: str = Field(..., description="Generated random numbers in binary string format")
+    count: int
+    post_processing: Optional[PostProcessingMethod] = Field(None, description="Optional post-processing method (e.g., 'von_neumann')")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "random_numbers": "10101",
+                "count": 5,
+                "post_processing": "von_neumann"
+            }
+        }

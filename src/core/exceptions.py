@@ -41,6 +41,11 @@ class PackageInstallationError(Exception):
 
     pass
 
+class QRNGError(Exception):
+    """Exception for QRNG-related errors"""
+
+    pass
+
 def setup_exception_handlers(app: FastAPI):
     """Register custom exception handlers"""
 

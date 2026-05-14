@@ -1,0 +1,14 @@
+# Example using JSON file (easiest)
+python3 randomness_processor.py --file json_samples/input_large_1.json
+
+# Example overriding postprocessing
+python3 randomness_processor.py --file json_samples/input_large_1.json --postprocessing none
+
+# Example using direct bitstring input (no file)
+python3 randomness_processor.py --input_bits 110011001100110011001100 --postprocessing xor
+
+# Example showing help and all arguments
+python3 randomness_processor.py --help
+
+# Example with explicit invalid input (for testing error handling)
+python3 randomness_processor.py --input_bits 123 --postprocessing none

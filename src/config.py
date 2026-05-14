@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     # Security
     SECRET_KEY: SecretStr = Field(default=SecretStr(secrets.token_urlsafe(32)))
     API_KEY_HEADER: str = Field(default="X-API-Key")
-    API_KEYS: List[str] = Field(default=["my-secret-key"])
+    API_KEYS: List[str] = Field(default=["my-secret-key","my-secret"])
     
     # Rate Limiting
     RATE_LIMIT_ENABLED: bool = Field(default=True)
@@ -67,14 +67,7 @@ class Settings(BaseSettings):
     ENABLE_CODE_VALIDATION: bool = Field(default=True)
     
     SUPPORTED_LANGUAGES: Dict[str, List[str]] = Field(default={
-        "python": ["javascript", "typescript", "java", "go", "rust", "csharp"],
-        "javascript": ["python", "typescript", "java", "go"],
-        "typescript": ["python", "javascript", "go"],
-        "java": ["python", "javascript", "go", "csharp"],
-        "go": ["python", "javascript", "typescript"],
-        "rust": ["python", "javascript", "csharp"],
-        "csharp": ["python", "javascript", "java", "go"],
-        "qasm": ["qiskit"],
+        "qasm": ["qiskit","cirq","qasm", "quil", "cudaq", "qulacs", "quest", "qi"],
     })
     
     # Monitoring

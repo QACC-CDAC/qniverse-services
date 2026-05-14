@@ -5,6 +5,7 @@ import json
 from typing import Dict, Any, Tuple, List, Optional
 
 from src.transpilers.base import BaseTranspiler
+from src.utils.logger import logger
 
 
 class QasmToQiskitTranspiler(BaseTranspiler):
@@ -31,9 +32,11 @@ class QasmToQiskitTranspiler(BaseTranspiler):
                 "target": "qiskit",
                 "options": options
             }
+            
+            logger.error(f"Transpilation payload: {json.dumps(payload)}")
 
             result = subprocess.run(
-                ["node", "lib/quantum-circuit/qasm_converter.js"],
+                ["node", "lib/qniverse-quantum-transpiler/src/index.js"],
                 input=json.dumps(payload),
                 text=True,
                 capture_output=True,

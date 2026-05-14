@@ -2,9 +2,10 @@
 
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from prometheus_fastapi_instrumentator import Instrumentator
 import time
 
@@ -27,6 +28,33 @@ setup_logging()
 # Track startup time
 start_time = time.time()
 
+# Define security scheme for OpenAPI
+security_scheme = HTTPBearer(
+    auto_error=False,
+    description="Enter your API key in the format: 'your-api-key-here'"
+)
+
+
+async def verify_api_key(credentials: HTTPAuthorizationCredentials = Depends(security_scheme)):
+    """Verify API key from Authorization header"""
+    api_key = credentials.credentials if credentials else None
+    
+    # Also check X-API-Key header (will be handled by middleware)
+    if not api_key:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing API key. Please provide via Authorization header or X-API-Key header",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    if api_key not in settings.API_KEYS:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid API key",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    return api_key
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator:
@@ -89,7 +117,7 @@ def create_app() -> FastAPI:
         ### Authentication
         All endpoints require an API key passed in the `X-API-Key` header.
         """,
-        docs_url="/docs" if settings.DEBUG else None,
+        docs_url="/docs",
         redoc_url="/redoc" if settings.DEBUG else None,
         openapi_url="/openapi.json",
         lifespan=lifespan,
@@ -105,6 +133,14 @@ def create_app() -> FastAPI:
             {
                 "name": "languages",
                 "description": "Get information about supported languages"
+            },
+            {
+                "name": "packages",
+                "description": "Get information about supported packages"
+            },
+            {
+                "name": "qrng",
+                "description": "Get Random numbers from Quantum Random Number Generator"
             }
         ]
     )
