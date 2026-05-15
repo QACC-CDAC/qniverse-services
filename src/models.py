@@ -331,3 +331,30 @@ class QRNGResponse(BaseModel):
                 "post_processing": "von_neumann"
             }
         }
+        
+class CloudQRNGRequest(BaseModel):
+    """Request model for QRNG generation"""
+    
+    count: int = Field(..., ge=64, le=5000000, description="Number of random bits to generate")
+      
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "count": 64,
+            }
+        }
+        
+
+class CloudQRNGResponse(BaseModel):
+    """Response model for Cloud QRNG generation"""
+    
+    random_numbers: str = Field(..., description="Generated random numbers in binary string format")
+    count: int
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "random_numbers": "10101",
+                "count": 5,
+            }
+        }

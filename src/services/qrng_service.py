@@ -67,7 +67,7 @@ class QRNGService:
         with open(STATE_FILE, "w") as f:
             json.dump(state, f)
 
-    def get_bits(self, count: int):
+    def get_bits(self, count: int) -> Dict[str, Any]:
 
             state = self.load_state()
 
@@ -79,7 +79,9 @@ class QRNGService:
             while len(collected_bits) < count:
 
                 if file_index >= len(FILES):
-                    raise Exception("No more bits available")
+                    file_index = 0
+                    bit_index = 0
+                    # raise Exception("No more bits available")
 
                 with open(FILES[file_index], "r") as f:
                     data = f.read().strip()
@@ -104,7 +106,7 @@ class QRNGService:
                 "file_index": file_index,
                 "bit_index": bit_index
             })
-            return {"random_numbers": collected_bits, "count": count, "post_processing": "none"}
+            return {"random_numbers": collected_bits, "count": count}
         
     
 

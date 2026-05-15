@@ -25,13 +25,13 @@ class Settings(BaseSettings):
     
     # Server Configuration
     HOST: str = Field(default="0.0.0.0")
-    PORT: int = Field(default=8000)
+    PORT: int = Field(default=8001)
     WORKERS: int = Field(default=4)
     
     # Security
     SECRET_KEY: SecretStr = Field(default=SecretStr(secrets.token_urlsafe(32)))
     API_KEY_HEADER: str = Field(default="X-API-Key")
-    API_KEYS: List[str] = Field(default=["my-secret-key","my-secret"])
+    API_KEYS: List[str] = Field(default=["my-secret-key","qniverse:Vyvj7SNW4DJXJYRJurqvQSvB7lnM7ouXle0nYZcuJDQ6BC2g9aAnPqlKUhAOav82wYnHaoH2lpABDZ3CYmGiN9LKZJYrgDcbvrDRvgveEJE9vE8BCA63ZvytSPFA3L2d2KtdZCWB8lbmGGRCyFiseLy2FZo4RQ25uWgYY87hiqfnBJdgP60F7fynCWORk0JAJZilHFSUfgbk605LoxOkJADJUfySBWigNa4HujGQYoJsSXEZW6gufS74N6dBWBdK"])
     
     # Rate Limiting
     RATE_LIMIT_ENABLED: bool = Field(default=True)
