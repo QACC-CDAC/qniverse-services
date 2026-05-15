@@ -54,7 +54,7 @@ htmlcov/
 docker-compose.override.yml
 
 # Data
-data/
+
 *.db
 *.sqlite
 
